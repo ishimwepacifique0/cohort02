@@ -1,0 +1,90 @@
+### JSX and Basic Components
+
+#### Topics:
+
+1. **Understanding JSX**
+   - **Definition**: JSX stands for JavaScript XML. It is a syntax extension for JavaScript that looks similar to HTML. JSX allows you to write HTML elements in JavaScript and place them in the DOM without using methods like `createElement()` or `appendChild()`.
+   - **Usage**: JSX makes it easier to write and add HTML in React. It is not a necessity for React, but it makes the code more readable and expressive.
+   - **Example**:
+     ```jsx
+     const element = <h1>Hello, world!</h1>;
+     ```
+
+2. **Creating Functional and Class Components**
+   - **Functional Components**: These are simple functions that return JSX. They are also known as stateless components.
+     - **Example**:
+       ```jsx
+       function Greeting() {
+         return <h1>Hello, world!</h1>;
+       }
+       ```
+   - **Class Components**: These are ES6 classes that extend from `React.Component` and can have state and lifecycle methods. They are also known as stateful components.
+     - **Example**:
+       ```jsx
+       class Greeting extends React.Component {
+         render() {
+           return <h1>Hello, world!</h1>;
+         }
+       }
+       ```
+
+3. **Props and State Basics**
+   - **Props**: Short for properties, props are read-only attributes used to pass data from a parent component to a child component.
+     - **Example**:
+       ```jsx
+       function Welcome(props) {
+         return <h1>Hello, {props.name}</h1>;
+       }
+       ```
+   - **State**: State is a built-in object that allows components to create and manage their own data. Unlike props, state is local to the component and can be changed (mutated).
+     - **Example**:
+       ```jsx
+       class Counter extends React.Component {
+         constructor(props) {
+           super(props);
+           this.state = { count: 0 };
+         }
+
+         render() {
+           return <h1>Count: {this.state.count}</h1>;
+         }
+       }
+       ```
+
+#### Resources:
+- [React JSX Introduction](https://reactjs.org/docs/introducing-jsx.html)
+- [Functional and Class Components](https://reactjs.org/docs/components-and-props.html)
+
+#### Challenge:
+- **Create a Simple React Component that Displays a Greeting Message**:
+  - **Objective**: Practice creating and using a React component.
+  - **Instructions**:
+    - Create a new React project if you don't have one already.
+    - Create a new functional component named `Greeting`.
+    - The component should return a JSX element that displays a greeting message like "Hello, world!".
+    - Render this component in the main `App` component.
+  - **Example**:
+    ```jsx
+    // Greeting.js
+    function Greeting() {
+      return <h1>Hello, world!</h1>;
+    }
+
+    export default Greeting;
+
+    // App.js
+    import React from 'react';
+    import Greeting from './Greeting';
+
+    function App() {
+      return (
+        <div>
+          <Greeting />
+        </div>
+      );
+    }
+
+    export default App;
+    ```
+
+---
