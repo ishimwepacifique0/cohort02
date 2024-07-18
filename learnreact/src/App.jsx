@@ -4,20 +4,62 @@ import Product from './components/product';
 
 function App() {
 
-  const products = [
-    { id: 1, name: "Product 1", price: 50, category: "Category 1", description: "Description of Product 1" },
-    { id: 2, name: "Product 2", price: 100, category: "Category 2", description: "Description of Product 2" },
-    // Add more products as needed
-];
+  // array object
+  const name = [{
+    id: 1,
+    name: "Gisele",
+    age: 20
+  },
+  {
+    id: 2,
+    name: "Paccy",
+    age: 20
+  },
+  {
+    id: 3,
+    name: "peggy",
+    age: 23
+  }
+  ]
 
-console.log(products[1].name)
+
+const handleElement = () =>{
+
+  
+}
+
 
   return (
     <>
       <div>
-        <Greeting />
-        <Product id={products[0].id} name={products[0].name} description={products[0].description} />
-        </div>        
+        <h1 className='text-xl text-red-200 bg-slate-900'>Product List</h1>
+        <div className='flex justify-center items-center'>
+          <table className=' border border-collapse'>
+            <tr className='border'>
+              <th className='p-4'>ID</th>
+              <th className='p-4'>Name</th>
+              <th className='p-4'>Age</th>
+              <th className='p-4'>Action</th>
+            </tr>
+            {name.map((items,index)=>{
+              return (
+                <>
+                <tr>
+                  <td>{items.id}</td>
+                  <td>{items.name}</td>
+                  <td>{items.age}</td>
+                  <td>
+                  <button className='bg-red-500 p-1 border rounded' onClick={handle} >Click me</button>
+                  </td>
+                </tr>
+                </>
+              )
+            })}
+
+          </table>
+          </div>
+          
+      </div>
     </>
   )
 }
