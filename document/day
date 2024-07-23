@@ -1,0 +1,275 @@
+### Day 3: Handling Events and Lists in React
+
+#### Topics:
+1. **Event Handling in React**
+2. **Rendering Lists and Keys**
+3. **Conditional Rendering**
+
+#### Resources:
+- [Handling Events](https://reactjs.org/docs/handling-events.html)
+- [Lists and Keys](https://reactjs.org/docs/lists-and-keys.html)
+
+### Challenge:
+Create a todo list application with the ability to add and remove items.
+
+#### Steps to Create a Todo List Application:
+
+1. **Set up your React project:**
+   - If you don't have a React project set up, you can create one using `create-react-app`.
+
+   ```bash
+   npx create-react-app todo-list-app
+   cd todo-list-app
+   npm start
+   ```
+
+2. **Create the main `TodoList` component:**
+   - Create a file named `TodoList.js` in the `src` folder.
+
+   ```jsx
+   // src/TodoList.js
+   import React, { useState } from 'react';
+
+   const TodoList = () => {
+     const [items, setItems] = useState([]);
+     const [inputValue, setInputValue] = useState('');
+
+     const handleAddItem = () => {
+       if (inputValue.trim() !== '') {
+         setItems([...items, inputValue]);
+         setInputValue('');
+       }
+     };
+
+     const handleRemoveItem = (index) => {
+       const newItems = items.filter((_, i) => i !== index);
+       setItems(newItems);
+     };
+
+     return (
+       <div>
+         <h1>Todo List</h1>
+         <input
+           type="text"
+           value={inputValue}
+           onChange={(e) => setInputValue(e.target.value)}
+         />
+         <button onClick={handleAddItem}>Add</button>
+         <ul>
+           {items.map((item, index) => (
+             <li key={index}>
+               {item} <button onClick={() => handleRemoveItem(index)}>Remove</button>
+             </li>
+           ))}
+         </ul>
+       </div>
+     );
+   };
+
+   export default TodoList;
+   ```
+
+3. **Update the `App` component to render `TodoList`:**
+   - Replace the content of `App.js` with the following:
+
+   ```jsx
+   // src/App.js
+   import React from 'react';
+   import TodoList from './TodoList';
+   import './App.css';
+
+   const App = () => {
+     return (
+       <div className="App">
+         <TodoList />
+       </div>
+     );
+   };
+
+   export default App;
+   ```
+
+4. **Run your application:**
+   - Ensure your application is running with `npm start`.
+
+#### Explanation:
+
+- **Event Handling in React:**
+  - We handle the `onChange` event on the input field to update `inputValue` state.
+  - The `onClick` event on the "Add" button adds the current `inputValue` to the `items` array and clears the input field.
+  - The `onClick` event on each "Remove" button removes the corresponding item from the `items` array.
+
+- **Rendering Lists and Keys:**
+  - We use the `map` function to render each item in the `items` array as a list element.
+  - Each list element has a `key` prop to help React identify which items have changed, are added, or are removed.
+
+- **Conditional Rendering:**
+  - The `handleAddItem` function checks if `inputValue` is not empty before adding it to the list.
+
+This challenge should help you understand the basics of event handling, rendering lists, and conditional rendering in React.
+
+
+
+// state management
+
+
+### Hooks in ReactJS
+
+Hooks are functions that let you use state and other React features in functional components. Introduced in React 16.8, hooks allow you to manage component state and lifecycle methods without needing to write class components. The two most commonly used hooks are `useState` and `useEffect`.
+
+#### Common Hooks
+
+1. **useState:**
+   - Used to add state to functional components.
+   
+   ```jsx
+   import React, { useState } from 'react';
+
+   function Counter() {
+     // Declare a state variable named "count", initialized to 0
+     const [count, setCount] = useState(0);
+
+     return (
+       <div>
+         <p>You clicked {count} times</p>
+         <button onClick={() => setCount(count + 1)}>Click me</button>
+       </div>
+     );
+   }
+
+   export default Counter;
+   ```
+
+   In this example:
+   - `useState(0)` initializes `count` to 0.
+   - `setCount` is a function that updates the state.
+
+2. **useEffect:**
+   - Used for performing side effects in functional components, such as fetching data, directly interacting with the DOM, or setting up subscriptions.
+   
+   ```jsx
+   import React, { useState, useEffect } from 'react';
+
+   function Example() {
+     const [count, setCount] = useState(0);
+
+     // Similar to componentDidMount and componentDidUpdate
+     useEffect(() => {
+       // Update the document title using the browser API
+       document.title = `You clicked ${count} times`;
+
+       // Cleanup function to be executed before the next useEffect call or component unmount
+       return () => {
+         document.title = 'React App';
+       };
+     }, [count]); // Only re-run the effect if count changes
+
+     return (
+       <div>
+         <p>You clicked {count} times</p>
+         <button onClick={() => setCount(count + 1)}>Click me</button>
+       </div>
+     );
+   }
+
+   export default Example;
+   ```
+
+   In this example:
+   - `useEffect` runs after the first render and after every update.
+   - The cleanup function ensures that any side effects are cleaned up.
+
+3. **useContext:**
+   - Allows you to subscribe to React context without introducing nesting.
+   
+   ```jsx
+   import React, { useContext } from 'react';
+
+   const ThemeContext = React.createContext('light');
+
+   function App() {
+     return (
+       <ThemeContext.Provider value="dark">
+         <Toolbar />
+       </ThemeContext.Provider>
+     );
+   }
+
+   function Toolbar() {
+     return (
+       <div>
+         <ThemedButton />
+       </div>
+     );
+   }
+
+   function ThemedButton() {
+     const theme = useContext(ThemeContext);
+     return <button theme={theme}>I am styled by theme context!</button>;
+   }
+
+   export default App;
+   ```
+
+   In this example:
+   - `useContext(ThemeContext)` allows `ThemedButton` to access the context value provided by `ThemeContext.Provider`.
+
+#### Example: Todo List Application using Hooks
+
+Here is an example of a todo list application using `useState` and `useEffect`.
+
+```jsx
+// src/TodoList.js
+import React, { useState, useEffect } from 'react';
+
+const TodoList = () => {
+  const [items, setItems] = useState(() => {
+    // Get initial state from localStorage
+    const savedItems = localStorage.getItem('items');
+    return savedItems ? JSON.parse(savedItems) : [];
+  });
+  const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    // Save items to localStorage whenever items state changes
+    localStorage.setItem('items', JSON.stringify(items));
+  }, [items]);
+
+  const handleAddItem = () => {
+    if (inputValue.trim() !== '') {
+      setItems([...items, inputValue]);
+      setInputValue('');
+    }
+  };
+
+  const handleRemoveItem = (index) => {
+    const newItems = items.filter((_, i) => i !== index);
+    setItems(newItems);
+  };
+
+  return (
+    <div>
+      <h1>Todo List</h1>
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
+      <button onClick={handleAddItem}>Add</button>
+      <ul>
+        {items.map((item, index) => (
+          <li key={index}>
+            {item} <button onClick={() => handleRemoveItem(index)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default TodoList;
+```
+
+In this example:
+- `useState` is used to manage the `items` and `inputValue` states.
+- `useEffect` is used to save the `items` state to `localStorage` whenever it changes.

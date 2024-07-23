@@ -1,0 +1,183 @@
+### Day 3: Handling Events and Lists in React
+
+#### Topics:
+1. **Event Handling in React**
+2. **Rendering Lists and Keys**
+3. **Conditional Rendering**
+
+#### Resources:
+
+### State in React
+
+State is an object that holds data that may change over the lifetime of a component. In class components, state is managed using `this.state` and `this.setState`. In functional components, state is managed using the `useState` hook.
+
+### useState Hook
+
+`useState` is a hook that allows you to add state to functional components. When you call `useState`, it returns an array with two values:
+1. The current state value.
+2. A function to update that state value.
+
+#### Syntax:
+```jsx
+const [state, setState] = useState(initialState);
+```
+#### Example:
+```jsx
+import React, { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0); // Declare a state variable "count" with initial value 0
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button> {/* Update state */}
+    </div>
+  );
+}
+
+export default Counter;
+```
+
+### useEffect Hook
+
+`useEffect` is a hook that allows you to perform side effects in functional components. Side effects can include data fetching, subscriptions, or manually changing the DOM.
+
+#### Syntax:
+```jsx
+useEffect(() => {
+  // effect
+  return () => {
+    // cleanup (optional)
+  };
+}, [dependencies]);
+```
+
+#### Example:
+```jsx
+import React, { useState, useEffect } from 'react';
+
+function Example() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    document.title = `You clicked ${count} times`; // Perform side effect
+
+    return () => {
+      document.title = 'React App'; // Cleanup side effect
+    };
+  }, [count]); // Dependency array: effect runs only when count changes
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+    </div>
+  );
+}
+
+export default Example;
+```
+
+### useContext Hook
+
+`useContext` is a hook that allows you to subscribe to React context without introducing nesting. Context provides a way to pass data through the component tree without having to pass props down manually at every level.
+
+#### Creating Context:
+```jsx
+const MyContext = React.createContext(defaultValue);
+```
+
+#### Using Context in Functional Components:
+```jsx
+import React, { useContext } from 'react';
+
+const ThemeContext = React.createContext('light');
+
+function ThemedButton() {
+  const theme = useContext(ThemeContext); // Subscribe to context value
+  return <button theme={theme}>I am styled by theme context!</button>;
+}
+
+function App() {
+  return (
+    <ThemeContext.Provider value="dark">
+      <ThemedButton />
+    </ThemeContext.Provider>
+  );
+}
+
+export default App;
+```
+
+#### Explanation:
+- **`useState`**: Initializes state and provides a way to update it.
+- **`useEffect`**: Performs side effects and optionally cleans them up. Runs after the first render and after every update (or only when dependencies change).
+- **`useContext`**: Subscribes to context and provides the context value.
+
+### Example: Todo List Application with Hooks
+
+Here's a todo list application using `useState`, `useEffect`, and `useContext`.
+
+```jsx
+import React, { useState, useEffect, useContext } from 'react';
+
+const ThemeContext = React.createContext('light');
+
+const TodoList = () => {
+  const [items, setItems] = useState(() => {
+    const savedItems = localStorage.getItem('items');
+    return savedItems ? JSON.parse(savedItems) : [];
+  });
+  const [inputValue, setInputValue] = useState('');
+  const theme = useContext(ThemeContext);
+
+  useEffect(() => {
+    localStorage.setItem('items', JSON.stringify(items));
+  }, [items]);
+
+  const handleAddItem = () => {
+    if (inputValue.trim() !== '') {
+      setItems([...items, inputValue]);
+      setInputValue('');
+    }
+  };
+
+  const handleRemoveItem = (index) => {
+    const newItems = items.filter((_, i) => i !== index);
+    setItems(newItems);
+  };
+
+  return (
+    <div style={{ background: theme === 'dark' ? '#333' : '#fff', color: theme === 'dark' ? '#fff' : '#000' }}>
+      <h1>Todo List</h1>
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
+      <button onClick={handleAddItem}>Add</button>
+      <ul>
+        {items.map((item, index) => (
+          <li key={index}>
+            {item} <button onClick={() => handleRemoveItem(index)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+const App = () => (
+  <ThemeContext.Provider value="dark">
+    <TodoList />
+  </ThemeContext.Provider>
+);
+
+export default App;
+```
+
+In this example:
+- `useState` manages the todo list items and input value.
+- `useEffect` synchronizes the items state with `localStorage`.
+- `useContext` provides a theme context to style the component.
