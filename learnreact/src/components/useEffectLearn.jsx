@@ -7,12 +7,13 @@ export default function UseEffectLearn() {
         console.log(date)
     }
 
-    useEffect(() => {
-        handleDiplay()
-    }, []) 
     
 
+
+
   return (
-    <div>useEffectLearn</div>
+    <div>
+      <button onClick={handleDiplay}>Click me</button>
+    </div>
   )
 }
